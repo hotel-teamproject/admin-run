@@ -99,7 +99,7 @@ const initData = async () => {
       { name: "조용준", email: "yongjun@example.com", password: hashedPw, phone: "010-7777-8888", role: "user", status: "active" },
       { name: "이현석", email: "hyunseok@example.com", password: hashedPw, phone: "010-1234-5678", role: "user", status: "active" },
       { name: "강승범", email: "seungbeom@example.com", password: hashedPw, phone: "010-2345-6789", role: "user", status: "active" },
-      { name: "하다민", email: "damin@example.com", password: hashedPw, phone: "010-3456-7890", role: "user", status: "active" },
+      { name: "하다민", email: "damin@example.com", password: hashedPw, phone: "010-3456-7899", role: "user", status: "active" },
       { name: "김병수", email: "byeongsoo@example.com", password: hashedPw, phone: "010-4567-8901", role: "user", status: "active" },
     ];
     
