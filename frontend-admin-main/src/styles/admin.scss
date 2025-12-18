@@ -1,0 +1,765 @@
+@use "./variables.scss" as *;
+
+// 관리자 레이아웃
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+
+  .admin-sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #0f766e 0%, #14b8a6 100%);
+    color: $text-white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .admin-main {
+    margin-left: 260px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .admin-header {
+    background: $bg-primary;
+    border-bottom: 2px solid $primary-color;
+    padding: $spacing-md $spacing-xl;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .admin-content {
+    flex: 1;
+    padding: $spacing-xl;
+  }
+}
+
+// 관리자 헤더
+.admin-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+
+    h2 {
+      color: $text-primary;
+      font-weight: 700;
+      font-size: $font-size-xl;
+      
+      &::after {
+        content: "";
+        display: inline-block;
+        width: 4px;
+        height: 24px;
+        background: $primary-color;
+        margin-left: $spacing-sm;
+        vertical-align: middle;
+        border-radius: 2px;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+
+    span {
+      font-weight: 500;
+      color: $text-primary;
+      padding: $spacing-xs $spacing-md;
+      background: $primary-color-light;
+      border-radius: $border-radius;
+      color: $primary-color;
+    }
+
+    .btn-outline {
+      border-color: $primary-color;
+      color: $primary-color;
+      font-weight: 500;
+
+      &:hover {
+        background: $primary-color;
+        color: $text-white;
+      }
+    }
+  }
+}
+
+// 관리자 사이드바
+.admin-sidebar-inner {
+  padding: $spacing-lg;
+
+  .sidebar-logo {
+    margin-bottom: $spacing-xl;
+    padding-bottom: $spacing-lg;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+    h2 {
+      font-size: $font-size-xl;
+      font-weight: 700;
+      color: $text-white;
+      letter-spacing: -0.5px;
+    }
+  }
+
+  .sidebar-menu {
+    list-style: none;
+
+    li {
+      margin-bottom: $spacing-xs;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      padding: $spacing-sm $spacing-md;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      border-radius: $border-radius;
+      transition: $transition-base;
+      font-size: $font-size-sm;
+      font-weight: 500;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: $text-white;
+        transform: translateX(4px);
+      }
+
+      &.active {
+        background: rgba(255, 255, 255, 0.25);
+        color: $text-white;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
+// 대시보드 카드
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+
+  .stat-card {
+    background: $bg-primary;
+    border-radius: $border-radius;
+    padding: $spacing-lg;
+    border: 1px solid $border-color;
+    box-shadow: $shadow-sm;
+    transition: $transition-base;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: $shadow-md;
+      border-color: $primary-color;
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: $spacing-md;
+
+      .stat-title {
+        font-size: $font-size-sm;
+        color: $text-secondary;
+        font-weight: 500;
+      }
+
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: $border-radius;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: $font-size-xl;
+      }
+    }
+
+    .stat-value {
+      font-size: $font-size-3xl;
+      font-weight: 700;
+      color: $text-primary;
+      margin-bottom: $spacing-xs;
+    }
+
+    .stat-change {
+      font-size: $font-size-xs;
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+
+      &.positive {
+        color: $success-color;
+      }
+
+      &.negative {
+        color: $danger-color;
+      }
+    }
+  }
+}
+
+// 필터
+.filter-bar {
+  display: flex;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+  align-items: flex-end;
+
+  .filter-group {
+    display: flex;
+    gap: $spacing-sm;
+    align-items: center;
+
+    label {
+      font-size: $font-size-sm;
+      font-weight: 500;
+      color: $text-primary;
+      white-space: nowrap;
+    }
+
+    input,
+    select {
+      padding: $spacing-sm $spacing-md;
+      border: 1px solid $border-color;
+      border-radius: $border-radius;
+      font-size: $font-size-sm;
+      min-width: 200px;
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+}
+
+// 뱃지
+.badge {
+  display: inline-block;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: 12px;
+  font-size: $font-size-xs;
+  font-weight: 600;
+
+  &.badge-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: $success-color;
+  }
+
+  &.badge-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: $danger-color;
+  }
+
+  &.badge-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: $warning-color;
+  }
+
+  &.badge-info {
+    background: rgba(6, 182, 212, 0.1);
+    color: $info-color;
+  }
+
+  &.badge-secondary {
+    background: rgba(100, 116, 139, 0.1);
+    color: $secondary-color;
+  }
+}
+
+// 페이지네이션
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $spacing-xs;
+  margin-top: $spacing-xl;
+
+  button {
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid $border-color;
+    background: $bg-primary;
+    color: $text-primary;
+    border-radius: $border-radius;
+    cursor: pointer;
+    transition: $transition-base;
+    font-size: $font-size-sm;
+
+    &:hover:not(:disabled) {
+      background: $bg-secondary;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.active {
+      background: $primary-color;
+      color: $text-white;
+      border-color: $primary-color;
+    }
+  }
+}
+
+// 차트 영역
+.chart-area {
+  margin-bottom: $spacing-xl;
+
+  .chart-card {
+    background: $bg-primary;
+    border-radius: $border-radius;
+    padding: $spacing-lg;
+    border: 1px solid $border-color;
+    box-shadow: $shadow-sm;
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-lg;
+
+      h3 {
+        font-size: $font-size-lg;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0;
+      }
+
+      .chart-legend {
+        display: flex;
+        gap: $spacing-lg;
+        align-items: center;
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: $spacing-xs;
+          font-size: $font-size-sm;
+          color: $text-secondary;
+
+          .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+          }
+        }
+      }
+    }
+
+    .chart-content {
+      min-height: 300px;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .chart-bars {
+      display: flex;
+      gap: $spacing-md;
+      align-items: flex-end;
+      width: 100%;
+      height: 300px;
+      padding: $spacing-md 0;
+
+      .chart-bar-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+
+        .bar-container {
+          width: 100%;
+          height: calc(100% - 30px);
+          display: flex;
+          align-items: flex-end;
+          gap: 4px;
+          padding: 0 $spacing-xs;
+
+          .bar {
+            flex: 1;
+            border-radius: 4px 4px 0 0;
+            transition: $transition-base;
+            cursor: pointer;
+            min-height: 4px;
+
+            &:hover {
+              opacity: 0.8;
+            }
+          }
+        }
+
+        .bar-label {
+          margin-top: $spacing-sm;
+          font-size: $font-size-xs;
+          color: $text-secondary;
+          text-align: center;
+        }
+      }
+    }
+
+    .chart-empty {
+      padding: $spacing-xl;
+      text-align: center;
+      color: $text-secondary;
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+// 최근 테이블
+.recent-tables {
+  margin-bottom: $spacing-xl;
+
+  .recent-table-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: $spacing-lg;
+
+    .recent-table-card {
+      background: $bg-primary;
+      border-radius: $border-radius;
+      border: 1px solid $border-color;
+      box-shadow: $shadow-sm;
+      overflow: hidden;
+
+      .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: $spacing-md $spacing-lg;
+        border-bottom: 1px solid $border-color;
+        background: $bg-secondary;
+
+        h3 {
+          font-size: $font-size-base;
+          font-weight: 600;
+          color: $text-primary;
+          margin: 0;
+        }
+
+        .table-count {
+          font-size: $font-size-sm;
+          color: $text-secondary;
+          background: $bg-primary;
+          padding: $spacing-xs $spacing-sm;
+          border-radius: 12px;
+        }
+      }
+
+      .table-content {
+        overflow-x: auto;
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+
+          thead {
+            background: $bg-secondary;
+
+            th {
+              padding: $spacing-sm $spacing-md;
+              text-align: left;
+              font-size: $font-size-xs;
+              font-weight: 600;
+              color: $text-secondary;
+              text-transform: uppercase;
+              border-bottom: 1px solid $border-color;
+            }
+          }
+
+          tbody {
+            tr {
+              border-bottom: 1px solid $border-color;
+              transition: $transition-base;
+
+              &:hover {
+                background: $bg-secondary;
+              }
+
+              &:last-child {
+                border-bottom: none;
+              }
+
+              td {
+                padding: $spacing-sm $spacing-md;
+                font-size: $font-size-sm;
+                color: $text-primary;
+
+                .rating {
+                  font-size: $font-size-sm;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .table-empty {
+        padding: $spacing-xl;
+        text-align: center;
+        color: $text-secondary;
+        font-size: $font-size-sm;
+      }
+    }
+  }
+}
+
+// 관리자 테이블
+.admin-table-container {
+  background: $bg-primary;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+  margin-bottom: $spacing-lg;
+
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      background: $bg-secondary;
+
+      th {
+        padding: $spacing-md;
+        text-align: left;
+        font-size: $font-size-xs;
+        font-weight: 600;
+        color: $text-secondary;
+        text-transform: uppercase;
+        border-bottom: 1px solid $border-color;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $border-color;
+        transition: $transition-base;
+
+        &:hover {
+          background: $bg-secondary;
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        td {
+          padding: $spacing-md;
+          font-size: $font-size-sm;
+          color: $text-primary;
+        }
+      }
+    }
+  }
+}
+
+// 테이블 액션 버튼
+.table-actions {
+  display: flex;
+  gap: $spacing-xs;
+  flex-wrap: wrap;
+}
+
+// 링크 버튼
+.link-button {
+  background: none;
+  border: none;
+  color: $primary-color;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
+  transition: $transition-base;
+  font-weight: 500;
+
+  &:hover {
+    color: $primary-color-hover;
+  }
+}
+
+// 빈 상태
+.table-empty-state {
+  background: $bg-primary;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  padding: $spacing-2xl;
+  text-align: center;
+  color: $text-secondary;
+  margin-bottom: $spacing-lg;
+}
+
+// 버튼 크기 변형
+.btn {
+  &.btn-sm {
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-size-xs;
+  }
+
+  &.btn-success {
+    background-color: $success-color;
+    color: $text-white;
+
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+  }
+}
+
+// 관리자 폼
+.admin-form-container {
+  background: $bg-primary;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  box-shadow: $shadow-sm;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+
+  .admin-form {
+    .form-section {
+      margin-bottom: $spacing-2xl;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .form-section-title {
+        font-size: $font-size-lg;
+        font-weight: 600;
+        color: $text-primary;
+        margin-bottom: $spacing-lg;
+        padding-bottom: $spacing-md;
+        border-bottom: 2px solid $border-color;
+      }
+    }
+
+    .form-group {
+      margin-bottom: $spacing-lg;
+
+      label {
+        display: block;
+        margin-bottom: $spacing-sm;
+        font-weight: 500;
+        font-size: $font-size-sm;
+        color: $text-primary;
+
+        &.checkbox-label {
+          display: flex;
+          align-items: flex-start;
+          gap: $spacing-sm;
+          cursor: pointer;
+          margin-bottom: 0;
+
+          input[type="checkbox"] {
+            width: auto;
+            margin-top: 4px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: $primary-color;
+            flex-shrink: 0;
+          }
+
+          .checkbox-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-xs;
+          }
+
+          span {
+            font-weight: 500;
+            color: $text-primary;
+            line-height: 1.5;
+          }
+
+          .form-help-text {
+            font-size: $font-size-xs;
+            color: $text-secondary;
+            font-weight: 400;
+            line-height: 1.4;
+            margin: 0;
+          }
+        }
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="number"],
+      input[type="date"],
+      input[type="password"],
+      select,
+      textarea {
+        width: 100%;
+        padding: $spacing-sm $spacing-md;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        font-size: $font-size-sm;
+        transition: $transition-base;
+        background: $bg-primary;
+        color: $text-primary;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px $primary-color-light;
+        }
+
+        &:disabled {
+          background-color: $bg-secondary;
+          cursor: not-allowed;
+          opacity: 0.6;
+        }
+      }
+
+      .form-help-text {
+        font-size: $font-size-xs;
+        color: $text-secondary;
+        font-weight: 400;
+        line-height: 1.4;
+        margin-top: $spacing-xs;
+        margin-bottom: 0;
+      }
+
+      .error {
+        display: block;
+        color: $danger-color;
+        font-size: $font-size-xs;
+        margin-top: $spacing-xs;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: $spacing-md;
+      margin-top: $spacing-xl;
+      padding-top: $spacing-lg;
+      border-top: 1px solid $border-color;
+    }
+  }
+}
