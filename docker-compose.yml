@@ -8,7 +8,7 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: hotel-project
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-hotel-project}
     volumes:
       - mongodb_data:/data/db
     networks:
@@ -23,11 +23,15 @@ services:
     ports:
       - "4000:4000"       # 👈 밖에서 4000번으로 들어옴
     environment:
-      - MONGODB_URI=mongodb://hotel-mongo:27017/hotel-project
-      - MONGO_URI=mongodb://hotel-mongo:27017/hotel-project
-      - JWT_SECRET=7f3f677d6a196d6a1b660795ca11b6e0c0884e60720fd284e403f51bd6830891
-      - PORT=4000         # 🟢 [수정] 3000 -> 4000 (내부에서도 4000번으로 켜야 연결됨!)
-      - FRONT_ORIGIN=http://localhost:5173 # 🟢 [추가 추천] CORS 에러 방지용
+      - MONGODB_URI=${MONGODB_URI:-mongodb://hotel-mongo:27017/hotel-project}
+      - MONGO_URI=${MONGO_URI:-mongodb://hotel-mongo:27017/hotel-project}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1h}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET:-${JWT_SECRET}}
+      - REFRESH_EXPIRES_IN=${REFRESH_EXPIRES_IN:-7d}
+      - PORT=${PORT:-4000}
+      - NODE_ENV=${NODE_ENV:-development}
+      - FRONT_ORIGIN=${FRONT_ORIGIN:-http://localhost:5173}
     depends_on:
       - mongodb
     volumes:
@@ -46,7 +50,7 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_URL=http://localhost:4000/api
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:4000/api}
     volumes:
       - ./frontend-admin-main:/app
       - /app/node_modules
