@@ -1,30 +1,33 @@
 version: '3.8'
 
 services:
-  mongodb:
+  # ▼▼▼ [수정 1] 서비스 이름을 'whotel-mongodb'로 변경 (코드와 일치시킴) ▼▼▼
+  whotel-mongodb:
     image: mongo:latest
-    container_name: hotel-mongo
+    container_name: whotel-mongodb
     restart: always
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-hotel-project}
+      MONGO_INITDB_DATABASE: hotel-project
     volumes:
       - mongodb_data:/data/db
     networks:
       - hotel-network
 
-  backend:
+  # ▼▼▼ [수정 2] 백엔드 서비스 이름도 whotel-backend로 통일 ▼▼▼
+  whotel-backend:
     build:
       context: ./backend-admin-main
       dockerfile: Dockerfile.dev
-    container_name: hotel-backend
+    container_name: whotel-backend
     restart: always
     ports:
-      - "4000:4000"       # 👈 밖에서 4000번으로 들어옴
+      - "4000:4000"
     environment:
-      - MONGODB_URI=${MONGODB_URI:-mongodb://hotel-mongo:27017/hotel-project}
-      - MONGO_URI=${MONGO_URI:-mongodb://hotel-mongo:27017/hotel-project}
+      # ▼▼▼ [수정 3] 주소를 whotel-mongodb로 통일 ▼▼▼
+      - MONGO_URI=mongodb://whotel-mongodb:27017/hotel-project
+      
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1h}
       - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET:-${JWT_SECRET}}
@@ -33,7 +36,7 @@ services:
       - NODE_ENV=${NODE_ENV:-development}
       - FRONT_ORIGIN=${FRONT_ORIGIN:-http://localhost:5173}
     depends_on:
-      - mongodb
+      - whotel-mongodb
     volumes:
       - ./backend-admin-main:/app
       - /app/node_modules
@@ -41,11 +44,12 @@ services:
       - hotel-network
     command: npm run dev
 
-  frontend:
+  # ▼▼▼ [수정 4] 프론트엔드 서비스 이름도 whotel-frontend로 통일 ▼▼▼
+  whotel-frontend:
     build:
       context: ./frontend-admin-main
       dockerfile: Dockerfile.dev
-    container_name: hotel-frontend
+    container_name: whotel-frontend
     restart: always
     ports:
       - "5173:5173"

@@ -2,8 +2,8 @@ require('dotenv').config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-// 🔴 [핵심] 주소 고정
-const MONGO_URI = "mongodb://localhost:27017/hotel-project";
+// ▼▼▼ [수정됨] 환경 변수가 있으면 쓰고, 없으면 로컬 주소(127.0.0.1) 사용
+const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/hotel-project";
 
 const initData = async () => {
   let connection = null;
@@ -107,7 +107,7 @@ const initData = async () => {
     console.log(`👤 유저 ${createdUsers.length}명 생성 완료`);
 
     // ====================================================
-    // 🏨 4. 호텔 생성 (이미지 수정됨!)
+    // 🏨 4. 호텔 생성
     // ====================================================
     const rawHotels = [
         {
@@ -145,7 +145,6 @@ const initData = async () => {
             address: "강원도 강릉시 창해로 307",
             price: 150000,
             description: "동해 바다 바로 앞에 위치한 인피니티 풀이 유명한 호텔입니다.",
-            // 🟢 [수정됨] 잘 나오는 새 이미지 URL로 교체!
             imageUrl: "https://images.unsplash.com/photo-1610641818989-c2051b5e2cfd?auto=format&fit=crop&w=800&q=80",
             rating: 4.2,
             class: 4,
@@ -228,7 +227,7 @@ const initData = async () => {
     ];
 
     await Booking.insertMany(rawBookings);
-    console.log(`📅 예약 ${rawBookings.length}건 생성 완료 (ID 매핑 성공)`);
+    console.log(`📅 예약 ${rawBookings.length}건 생성 완료`);
 
 
     // ====================================================
@@ -283,7 +282,7 @@ const initData = async () => {
     ];
 
     await Review.insertMany(rawReviews);
-    console.log(`⭐ 리뷰 ${rawReviews.length}건 생성 완료 (ID 매핑 성공)`);
+    console.log(`⭐ 리뷰 ${rawReviews.length}건 생성 완료`);
 
 
     // ====================================================
