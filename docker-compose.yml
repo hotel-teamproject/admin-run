@@ -25,8 +25,9 @@ services:
     ports:
       - "4000:4000"
     environment:
-      # ▼▼▼ [수정 3] 주소를 whotel-mongodb로 통일 ▼▼▼
-      - MONGO_URI=mongodb://whotel-mongodb:27017/hotel-project
+      # ▼▼▼ MongoDB 연결: .env 파일의 MONGO_URI 사용 (Atlas 또는 로컬) ▼▼▼
+      - MONGO_URI=${MONGO_URI:-mongodb://whotel-mongodb:27017/hotel-project}
+      - MONGODB_URI=${MONGODB_URI:-${MONGO_URI:-mongodb://whotel-mongodb:27017/hotel-project}}
       
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1h}
