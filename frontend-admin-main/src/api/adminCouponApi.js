@@ -1,27 +1,46 @@
 import axiosClient from "./axiosClient";
 
+/**
+ * 서버 데이터를 UI 형식으로 변환 (Mapping)
+ * DB: validFrom, validUntil, status -> UI: startDate, endDate, isActive
+ */
+const transformToUI = (coupon) => {
+  if (!coupon) return null;
+  return {
+    ...coupon,
+    id: coupon._id || coupon.id,
+    startDate: coupon.validFrom || coupon.startDate,
+    endDate: coupon.validUntil || coupon.endDate,
+    isActive: coupon.status === "active" || coupon.isActive === true,
+    discountType: coupon.discountType === "amount" ? "fixed" : coupon.discountType
+  };
+};
+
 export const adminCouponApi = {
-  // 1. 목록 조회
-  getCoupons: (params) => {
-    return axiosClient.get("/admin/coupons", { params });
+  getCoupons: async (params) => {
+    const response = await axiosClient.get("/admin/coupons", { params });
+    if (response.data?.data?.coupons) {
+      response.data.data.coupons = response.data.data.coupons.map(transformToUI);
+    }
+    return response;
   },
 
-  // 🟢 [추가됨] 상세 조회 (이게 없어서 에러가 났던 것입니다!)
-  getCouponById: (id) => {
-    return axiosClient.get(`/admin/coupons/${id}`);
+  getCouponById: async (id) => {
+    const response = await axiosClient.get(`/admin/coupons/${id}`);
+    if (response.data?.data) {
+      response.data.data = transformToUI(response.data.data);
+    }
+    return response;
   },
 
-  // 3. 생성
   createCoupon: (data) => {
     return axiosClient.post("/admin/coupons", data);
   },
 
-  // 4. 수정
   updateCoupon: (id, data) => {
     return axiosClient.put(`/admin/coupons/${id}`, data);
   },
 
-  // 5. 삭제
   deleteCoupon: (id) => {
     return axiosClient.delete(`/admin/coupons/${id}`);
   },
