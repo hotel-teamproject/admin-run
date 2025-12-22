@@ -1,12 +1,23 @@
 import axios from "axios";
 
+// 환경에 따른 baseURL 설정
+// 개발 환경: Vite proxy 사용 (/api)
+// 배포 환경: nginx proxy 사용 (/api) 또는 직접 백엔드 URL
+const getBaseURL = () => {
+  // 환경 변수가 있으면 사용 (배포 환경)
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // 개발 환경에서는 Vite proxy 사용
+  return "/api";
+};
+
 const axiosClient = axios.create({
-  // 🔴 [수정 완료] 
-  // http://localhost:5000 을 지우고 '/api'만 남깁니다.
-  // 이렇게 해야 vite.config.js의 proxy 설정을 타고 백엔드로 연결됩니다.
-  baseURL: "/api", 
+  baseURL: getBaseURL(),
   
-  timeout: 10000,
+  // 타임아웃 시간 증가 (배포 환경에서 네트워크 지연 대비)
+  timeout: 30000, // 30초로 증가
+  
   headers: {
     "Content-Type": "application/json",
   },
@@ -42,8 +53,19 @@ axiosClient.interceptors.response.use(
       localStorage.removeItem("adminToken");
       window.location.href = "/admin/login";
     }
+    
+    // 타임아웃 에러 처리
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      return Promise.reject(new Error('요청 시간이 초과되었습니다. 네트워크 연결을 확인해주세요.'));
+    }
+    
+    // 네트워크 에러 처리
+    if (error.message === 'Network Error' || !error.response) {
+      return Promise.reject(new Error('서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.'));
+    }
+    
     // 에러 메시지 추출
-    const errorMessage = error.response?.data?.message || error.message;
+    const errorMessage = error.response?.data?.message || error.message || '알 수 없는 오류가 발생했습니다.';
     return Promise.reject(new Error(errorMessage));
   }
 );

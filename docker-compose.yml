@@ -1,7 +1,8 @@
 version: '3.8'
 
 services:
-  # ▼▼▼ [수정 1] 서비스 이름을 'whotel-mongodb'로 변경 (코드와 일치시킴) ▼▼▼
+  # Atlas를 사용하므로 로컬 DB 서비스는 필수가 아니지만, 
+  # 필요에 따라 유지하거나 주석 처리하셔도 됩니다.
   whotel-mongodb:
     image: mongo:latest
     container_name: whotel-mongodb
@@ -15,7 +16,6 @@ services:
     networks:
       - hotel-network
 
-  # ▼▼▼ [수정 2] 백엔드 서비스 이름도 whotel-backend로 통일 ▼▼▼
   whotel-backend:
     build:
       context: ./backend-admin-main
@@ -23,17 +23,18 @@ services:
     container_name: whotel-backend
     restart: always
     ports:
-      - "4000:4000"
+      - "4000:4000" # 외부 포트 4000번 사용
     environment:
-      # ▼▼▼ [수정 3] 주소를 whotel-mongodb로 통일 ▼▼▼
-      - MONGO_URI=mongodb://whotel-mongodb:27017/hotel-project
+      # ▼▼▼ [수정됨] MongoDB Atlas 연결 주소 적용 ▼▼▼
+      - MONGO_URI=mongodb+srv://dr701050:1234@cluster0.ntbddof.mongodb.net/hotel-project?retryWrites=true&w=majority&appName=Cluster0
+      - MONGODB_URI=mongodb+srv://dr701050:1234@cluster0.ntbddof.mongodb.net/hotel-project?retryWrites=true&w=majority&appName=Cluster0
       
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1h}
       - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET:-${JWT_SECRET}}
       - REFRESH_EXPIRES_IN=${REFRESH_EXPIRES_IN:-7d}
-      - PORT=${PORT:-4000}
-      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=4000 # 포트 번호를 Docker 포트(4000)와 일치시킴
+      - NODE_ENV=development
       - FRONT_ORIGIN=${FRONT_ORIGIN:-http://localhost:5173}
     depends_on:
       - whotel-mongodb
@@ -44,7 +45,6 @@ services:
       - hotel-network
     command: npm run dev
 
-  # ▼▼▼ [수정 4] 프론트엔드 서비스 이름도 whotel-frontend로 통일 ▼▼▼
   whotel-frontend:
     build:
       context: ./frontend-admin-main
@@ -54,7 +54,8 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_API_URL=${VITE_API_URL:-http://localhost:4000/api}
+      # 프론트엔드에서 바라볼 백엔드 주소 (로컬 테스트 시)
+      - VITE_API_URL=http://localhost:4000/api 
     volumes:
       - ./frontend-admin-main:/app
       - /app/node_modules

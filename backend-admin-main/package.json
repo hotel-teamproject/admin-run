@@ -5,7 +5,8 @@
     "main": "server.cjs",
     "scripts": {
         "dev": "nodemon server.cjs",
-        "start": "node server.cjs"
+        "start": "node server.cjs",
+        "seed": "node init-data.cjs"
     },
     "dependencies": {
         "bcryptjs": "^3.0.3",

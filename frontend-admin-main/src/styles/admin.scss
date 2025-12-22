@@ -232,12 +232,15 @@
     display: flex;
     gap: $spacing-sm;
     align-items: center;
+    flex: 1;
+    min-width: 200px;
 
     label {
       font-size: $font-size-sm;
       font-weight: 500;
       color: $text-primary;
       white-space: nowrap;
+      min-width: 60px;
     }
 
     input,
@@ -246,13 +249,71 @@
       border: 1px solid $border-color;
       border-radius: $border-radius;
       font-size: $font-size-sm;
-      min-width: 200px;
+      flex: 1;
+      min-width: 150px;
     }
   }
 
   .filter-actions {
     display: flex;
     gap: $spacing-sm;
+    flex-shrink: 0;
+  }
+
+  // 태블릿 반응형
+  @media (max-width: 1024px) {
+    .filter-group {
+      min-width: 180px;
+      
+      label {
+        min-width: 50px;
+        font-size: $font-size-xs;
+      }
+    }
+  }
+
+  // 모바일 반응형
+  @media (max-width: 768px) {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: $spacing-xs !important;
+    margin-bottom: $spacing-md !important;
+    padding: $spacing-xs !important;
+    background: $bg-secondary !important;
+    border-radius: $border-radius !important;
+
+    .filter-group {
+      flex: 1 !important;
+      min-width: 0 !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: $spacing-xs !important;
+
+      label {
+        display: none !important; // 모바일에서 라벨 숨김
+        min-width: auto;
+        margin-bottom: 0;
+      }
+
+      input,
+      select {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: $spacing-xs $spacing-sm !important;
+        font-size: $font-size-xs !important;
+      }
+    }
+
+    .filter-actions {
+      flex-shrink: 0 !important;
+      gap: $spacing-xs !important;
+
+      button {
+        padding: $spacing-xs $spacing-sm !important;
+        font-size: $font-size-xs !important;
+        white-space: nowrap !important;
+      }
+    }
   }
 }
 
@@ -540,6 +601,7 @@
   .admin-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 800px; // 최소 너비 보장
 
     thead {
       background: $bg-secondary;
@@ -552,6 +614,7 @@
         color: $text-secondary;
         text-transform: uppercase;
         border-bottom: 1px solid $border-color;
+        white-space: nowrap;
       }
     }
 
@@ -572,6 +635,103 @@
           padding: $spacing-md;
           font-size: $font-size-sm;
           color: $text-primary;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  // 태블릿: 가로 스크롤 활성화
+  @media (max-width: 1024px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .admin-table {
+      th, td {
+        padding: $spacing-sm $spacing-md;
+        font-size: $font-size-xs;
+      }
+    }
+  }
+}
+
+// 모바일: 카드 형태로 변경 (별도 미디어 쿼리로 분리)
+@media (max-width: 768px) {
+  .admin-table-container.mobile-card-view {
+    overflow-x: visible;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: $spacing-md;
+
+    .admin-table {
+      display: block !important;
+      width: 100%;
+      min-width: auto;
+
+      thead {
+        display: none !important;
+      }
+
+      tbody {
+        display: block !important;
+
+        tr {
+          display: block !important;
+          background: $bg-primary;
+          border: 1px solid $border-color;
+          border-radius: $border-radius;
+          margin-bottom: $spacing-md;
+          padding: $spacing-md;
+          box-shadow: $shadow-sm;
+          transition: $transition-base;
+
+          &:hover {
+            box-shadow: $shadow-md;
+            transform: translateY(-2px);
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          td {
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center;
+            padding: $spacing-sm $spacing-xs;
+            border-bottom: 1px solid $border-color;
+            white-space: normal;
+            min-height: 40px;
+
+            &:last-child {
+              border-bottom: none;
+              padding-top: $spacing-md;
+            }
+
+            &::before {
+              content: attr(data-label) !important;
+              font-weight: 600;
+              color: $text-secondary;
+              margin-right: $spacing-md;
+              flex-shrink: 0;
+              min-width: 70px;
+              font-size: $font-size-xs;
+            }
+
+            // 작업 버튼 영역은 data-label이 "작업"인 경우
+            &[data-label="작업"] {
+              flex-direction: column;
+              align-items: stretch;
+              gap: $spacing-xs;
+              padding-top: $spacing-md;
+
+              &::before {
+                display: none !important;
+              }
+            }
+          }
         }
       }
     }
@@ -583,6 +743,20 @@
   display: flex;
   gap: $spacing-xs;
   flex-wrap: wrap;
+
+  // 모바일에서 버튼 크기 조정
+  @media (max-width: 768px) {
+    flex-direction: row;
+    width: 100%;
+    gap: $spacing-xs;
+
+    button {
+      flex: 1;
+      padding: $spacing-xs $spacing-sm;
+      font-size: $font-size-xs;
+      min-width: 0;
+    }
+  }
 }
 
 // 링크 버튼
@@ -760,6 +934,100 @@
       margin-top: $spacing-xl;
       padding-top: $spacing-lg;
       border-top: 1px solid $border-color;
+    }
+  }
+}
+
+// 페이지 헤더
+.page-header {
+  margin-bottom: $spacing-xl;
+
+  h1 {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: $spacing-lg;
+
+    h1 {
+      font-size: $font-size-xl;
+    }
+  }
+}
+
+// 호텔 목록 페이지
+.admin-hotel-list-page {
+  width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+}
+
+// 반응형 미디어 쿼리
+@media (max-width: 1024px) {
+  .admin-layout {
+    .admin-sidebar {
+      width: 220px;
+    }
+
+    .admin-main {
+      margin-left: 220px;
+    }
+
+    .admin-content {
+      padding: $spacing-lg;
+    }
+  }
+
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-layout {
+    .admin-sidebar {
+      width: 100%;
+      position: relative;
+      height: auto;
+    }
+
+    .admin-main {
+      margin-left: 0;
+    }
+
+    .admin-content {
+      padding: $spacing-md;
+    }
+  }
+
+  .stats-cards {
+    grid-template-columns: 1fr;
+    gap: $spacing-md;
+  }
+
+  .detail-section .detail-row {
+    flex-direction: column;
+
+    .label {
+      width: 100%;
+      margin-bottom: $spacing-xs;
+    }
+  }
+
+  // 페이지네이션 모바일 최적화
+  .pagination {
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+
+    button {
+      padding: $spacing-xs $spacing-sm;
+      font-size: $font-size-xs;
+      min-width: 36px;
     }
   }
 }

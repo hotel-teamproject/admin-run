@@ -32,7 +32,7 @@ const AdminHotelTable = ({ hotels = [], onApprove, onReject, onDelete }) => {
   }
 
   return (
-    <div className="admin-table-container">
+    <div className="admin-table-container mobile-card-view">
       <table className="admin-table">
         <thead>
           <tr>
@@ -51,8 +51,8 @@ const AdminHotelTable = ({ hotels = [], onApprove, onReject, onDelete }) => {
             /* 1. key 값 변경: hotel.id -> hotel._id */
             <tr key={hotel._id}>
               {/* 2. 화면 표시용 ID 변경 */}
-              <td title={hotel._id}>#{hotel._id.slice(-6)}</td>
-              <td>
+              <td data-label="ID" title={hotel._id}>#{hotel._id.slice(-6)}</td>
+              <td data-label="호텔명">
                 <button
                   className="link-button"
                   /* 3. 상세 페이지 이동 링크 변경 */
@@ -61,18 +61,18 @@ const AdminHotelTable = ({ hotels = [], onApprove, onReject, onDelete }) => {
                   {hotel.name || '-'}
                 </button>
               </td>
-              <td>{hotel.address || '-'}</td>
-              <td>
+              <td data-label="주소">{hotel.address || '-'}</td>
+              <td data-label="등급">
                 {hotel.rating
                   ? '⭐'.repeat(Math.floor(hotel.rating))
                   : '-'}
               </td>
-              <td>{formatCurrency(hotel.price)}</td>
-              <td>
+              <td data-label="가격">{formatCurrency(hotel.price)}</td>
+              <td data-label="상태">
                 <StatusBadge status={hotel.status} type="hotel" />
               </td>
-              <td>{formatDate(hotel.createdAt)}</td>
-              <td>
+              <td data-label="등록일">{formatDate(hotel.createdAt)}</td>
+              <td data-label="작업">
                 <div className="table-actions">
                   {hotel.status === 'pending' && (
                     <>

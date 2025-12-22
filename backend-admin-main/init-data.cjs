@@ -2,35 +2,32 @@ require('dotenv').config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-// ▼▼▼ [수정됨] 환경 변수가 있으면 쓰고, 없으면 로컬 주소(127.0.0.1) 사용
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/hotel-project";
+// ▼▼▼ [수정됨] MongoDB Atlas 주소를 기본값으로 설정 ▼▼▼
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://dr701050:1234@cluster0.ntbddof.mongodb.net/hotel-project?retryWrites=true&w=majority&appName=Cluster0";
 
 const initData = async () => {
   let connection = null;
   try {
     connection = await mongoose.connect(MONGO_URI);
     console.log(`-------------------------------------------`);
-    console.log(`🎯 [데이터 통합 초기화] hotel-project DB`);
-    console.log(`📡 주소: ${MONGO_URI}`);
+    console.log(`🎯 [데이터 통합 초기화] MongoDB Atlas 접속 성공`);
+    console.log(`📡 대상 DB: hotel-project`);
     console.log(`-------------------------------------------`);
 
     // ====================================================
-    // 🛠️ 1. 모델 정의
+    // 🛠️ 1. 모델 정의 (변경 없음)
     // ====================================================
     
-    // 1-1. User
     const userSchema = new mongoose.Schema({
         name: String, email: String, password: String, phone: String, role: String, status: String, createdAt: { type: Date, default: Date.now }
     });
     const User = mongoose.models.User || mongoose.model("User", userSchema);
 
-    // 1-2. Hotel
     const hotelSchema = new mongoose.Schema({
         name: String, address: String, price: Number, description: String, imageUrl: String, rating: Number, class: Number, status: String, createdAt: { type: Date, default: Date.now }
     });
     const Hotel = mongoose.models.Hotel || mongoose.model("Hotel", hotelSchema);
 
-    // 1-3. Booking
     const bookingSchema = new mongoose.Schema({
         userId: mongoose.Schema.Types.ObjectId,
         hotelId: mongoose.Schema.Types.ObjectId,
@@ -49,7 +46,6 @@ const initData = async () => {
     });
     const Booking = mongoose.models.Booking || mongoose.model("Booking", bookingSchema);
 
-    // 1-4. Review
     const reviewSchema = new mongoose.Schema({
         userId: mongoose.Schema.Types.ObjectId,
         hotelId: mongoose.Schema.Types.ObjectId,
@@ -61,7 +57,6 @@ const initData = async () => {
     });
     const Review = mongoose.models.Review || mongoose.model("Review", reviewSchema);
 
-    // 1-5. Coupon
     const couponSchema = new mongoose.Schema({
         name: String,
         code: String,
@@ -84,7 +79,7 @@ const initData = async () => {
     await Booking.deleteMany({});
     await Review.deleteMany({});
     await Coupon.deleteMany({});
-    console.log("🗑️  기존 데이터(유저, 호텔, 예약, 리뷰, 쿠폰) 삭제 완료");
+    console.log("🗑️  Atlas 기존 데이터(유저, 호텔, 예약, 리뷰, 쿠폰) 삭제 완료");
 
     // ====================================================
     // 👤 3. 유저 생성
@@ -173,10 +168,10 @@ const initData = async () => {
     
     const rawBookings = [
         {
-            userId: createdUsers[1]._id, // 김민수
+            userId: createdUsers[1]._id,
             userName: createdUsers[1].name,
             userEmail: createdUsers[1].email,
-            hotelId: createdHotels[0]._id, // 하얏트
+            hotelId: createdHotels[0]._id,
             hotelName: createdHotels[0].name,
             checkIn: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5),
             checkOut: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7),
@@ -186,10 +181,10 @@ const initData = async () => {
             status: "예약확정"
         },
         {
-            userId: createdUsers[2]._id, // 임우진
+            userId: createdUsers[2]._id,
             userName: createdUsers[2].name,
             userEmail: createdUsers[2].email,
-            hotelId: createdHotels[1]._id, // 시그니엘
+            hotelId: createdHotels[1]._id,
             hotelName: createdHotels[1].name,
             checkIn: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 10),
             checkOut: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 11),
@@ -199,10 +194,10 @@ const initData = async () => {
             status: "완료"
         },
         {
-            userId: createdUsers[3]._id, // 조용준
+            userId: createdUsers[3]._id,
             userName: createdUsers[3].name,
             userEmail: createdUsers[3].email,
-            hotelId: createdHotels[2]._id, // 제주 신라
+            hotelId: createdHotels[2]._id,
             hotelName: createdHotels[2].name,
             checkIn: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
             checkOut: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 4),
@@ -212,10 +207,10 @@ const initData = async () => {
             status: "예약확정"
         },
         {
-            userId: createdUsers[1]._id, // 김민수
+            userId: createdUsers[1]._id,
             userName: createdUsers[1].name,
             userEmail: createdUsers[1].email,
-            hotelId: createdHotels[3]._id, // 강릉
+            hotelId: createdHotels[3]._id,
             hotelName: createdHotels[3].name,
             checkIn: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 10),
             checkOut: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 8),
@@ -235,45 +230,45 @@ const initData = async () => {
     // ====================================================
     const rawReviews = [
         {
-            userId: createdUsers[1]._id, // 김민수
+            userId: createdUsers[1]._id,
             userName: createdUsers[1].name,
-            hotelId: createdHotels[0]._id, // 하얏트
+            hotelId: createdHotels[0]._id,
             hotelName: createdHotels[0].name,
             rating: 5,
             content: "역시 하얏트입니다. 야경이 정말 끝내주네요!",
             createdAt: new Date()
         },
         {
-            userId: createdUsers[2]._id, // 임우진
+            userId: createdUsers[2]._id,
             userName: createdUsers[2].name,
-            hotelId: createdHotels[1]._id, // 시그니엘
+            hotelId: createdHotels[1]._id,
             hotelName: createdHotels[1].name,
             rating: 5,
             content: "부산 최고의 호텔. 비싸지만 돈 값 합니다.",
             createdAt: new Date(Date.now() - 86400000)
         },
         {
-            userId: createdUsers[3]._id, // 조용준
+            userId: createdUsers[3]._id,
             userName: createdUsers[3].name,
-            hotelId: createdHotels[2]._id, // 제주 신라
+            hotelId: createdHotels[2]._id,
             hotelName: createdHotels[2].name,
             rating: 4,
             content: "서비스는 좋은데 시설이 살짝 노후된 느낌?",
             createdAt: new Date(Date.now() - 172800000)
         },
         {
-            userId: createdUsers[4]._id, // 이현석
+            userId: createdUsers[4]._id,
             userName: createdUsers[4].name,
-            hotelId: createdHotels[3]._id, // 강릉
+            hotelId: createdHotels[3]._id,
             hotelName: createdHotels[3].name,
             rating: 3,
             content: "인피니티 풀 사람 너무 많아서 물반 사람반...",
             createdAt: new Date(Date.now() - 259200000)
         },
         {
-            userId: createdUsers[1]._id, // 김민수
+            userId: createdUsers[1]._id,
             userName: createdUsers[1].name,
-            hotelId: createdHotels[4]._id, // 파라다이스
+            hotelId: createdHotels[4]._id,
             hotelName: createdHotels[4].name,
             rating: 5,
             content: "가족여행으로 최고입니다. 아이들이 정말 좋아해요.",
@@ -293,7 +288,7 @@ const initData = async () => {
             name: "오픈 기념 할인",
             code: "WELCOME2025",
             discountType: "percentage",
-            discountValue: 10, // 10%
+            discountValue: 10,
             validFrom: today,
             validUntil: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
             usageLimit: 100,
@@ -304,7 +299,7 @@ const initData = async () => {
             name: "여름 휴가 지원금",
             code: "SUMMER5000",
             discountType: "amount",
-            discountValue: 5000, // 5000원
+            discountValue: 5000,
             validFrom: today,
             validUntil: new Date(today.getFullYear(), today.getMonth() + 2, today.getDate()),
             usageLimit: 50,
@@ -328,7 +323,7 @@ const initData = async () => {
     console.log(`🎟️ 쿠폰 ${rawCoupons.length}개 생성 완료!`);
 
     console.log(`-------------------------------------------`);
-    console.log(`🎉 모든 데이터 통합 생성 완료!`);
+    console.log(`🎉 Atlas 클라우드 데이터 초기화 완료!`);
     console.log(`-------------------------------------------`);
 
   } catch (error) {

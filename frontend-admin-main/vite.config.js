@@ -12,7 +12,7 @@ export default defineConfig({
     // '/api'로 시작하는 요청이 오면 5000번 포트(백엔드)로 토스합니다.
     proxy: {
       '/api': {
-        target: 'http://localhost:4000', // 백엔드 주소 (여기가 핵심!)
+        target: 'http://backend:4000', // 백엔드 주소 (여기가 핵심!)
         changeOrigin: true,
         secure: false,
       },
