@@ -8,16 +8,14 @@ export default defineConfig({
     host: true,
     port: 5173,
     
-    // ▼▼▼ [추가할 부분 시작] ▼▼▼
-    // '/api'로 시작하는 요청이 오면 5000번 포트(백엔드)로 토스합니다.
     proxy: {
       '/api': {
-        target: 'http://backend:4000', // 백엔드 주소 (여기가 핵심!)
+        // 🔴 반드시 'backend'를 'localhost'로 수정해야 합니다.
+        target: 'http://localhost:4000', 
         changeOrigin: true,
         secure: false,
       },
     },
-    // ▲▲▲ [추가할 부분 끝] ▲▲▲
 
     watch: {
       usePolling: true, 
